@@ -1,3 +1,3 @@
-module github.com/ajalck/WeatherApp
+module WeatherApp
 
 go 1.20

@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/ajalck/WeatherApp/config"
+	"WeatherApp/config"
 )
 
 func Hello(w http.ResponseWriter, r *http.Request) {

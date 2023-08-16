@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/ajalck/WeatherApp/app"
+	"WeatherApp/app"
 )
 
 func main() {
