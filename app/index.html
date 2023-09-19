@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=\, initial-scale=1.0">
+  <title>Document</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
+    crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+
+<body>
+  <section class="vh-100" style="background-color: #4B515D;">
+    <div class="container py-5 h-100">
+
+      <div class="row d-flex justify-content-center align-items-center h-100">
+        <div class="col-md-8 col-lg-6 col-xl-4">
+
+          <div class="card" style="color: #4B515D; border-radius: 35px;">
+
+
+            <div class="card-body p-4">
+              <div class="input-group justify-content-center">
+                <div class="form-outline">
+                  <form method="post" id="form">
+                    <input type="search" placeholder="City" id="cityInput" class="form-control" />
+
+                </div>
+                <button type="button" id="submitButton" class="btn btn-secondary">
+                  <i class="fas fa-search">search</i>
+                </button>
+                </form>
+
+
+                <!-- <div id="result"></div> -->
+
+              </div>
+
+            </div>
+
+            <div class="card-body p-4">
+
+              <div class="d-flex">
+                <h6 class="flex-grow-1">Warsaw</h6>
+                <h6>15:07</h6>
+              </div>
+
+              <div class="d-flex flex-column text-center mt-5 mb-4">
+                <h6 class="display-4 mb-0 font-weight-bold" id="temp" style="color: #1C2331;"> 0°C </h6>
+                <h5 id="state" style="color: #868B94">Stormy</h5>
+              </div>
+
+              <div class="d-flex align-items-center">
+                <div class="flex-grow-1" style="font-size: 1.1rem;">
+                  <div>
+                    <i class="fa-solid fa-wind" style="color: #868B94;"></i>
+                    <span id="speed"> 0km/h </span>
+                    <span id="icon" class="" style="align-items: flex-end;"></span>
+                  </div>
+
+                  <div><i class="fas fa-tint fa-fw" style="color: #868B94;"></i> <span id="humidity"> 0%
+                    </span>
+                  </div>
+                  <div><i class="fa-solid fa-sun" style="color: #868B94;"></i> <span id="sunrise">00:00</span>
+                  </div>
+                  <div><i class="fa-solid fa-moon" style="color: #868B94;"></i> <span id="sunset">00:00</span>
+                  </div>
+                </div>
+                <div>
+                  <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-weather/ilu1.webp"
+                    width="100px">
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <script>
+
+    $(document).ready(function () {
+      // Add a click event listener to the submit button
+      $("#submitButton").click(function () {
+        // Get the value of the city input
+        var city = $("#cityInput").val();
+
+        // Perform an AJAX request
+        $.ajax({
+          type: "GET", // You can change this to "GET" if needed
+          url: "/weather/:city?city=" + city, // Replace with your server endpoint
+          //  data: { city: city }, // Send the city value as a parameter
+          success: function (response) {
+            njan = response
+            if (response) {
+              console.log(response)
+              weatherDataConfig(response)
+
+            } else {
+              console.log("Response not found!")
+            }
+            // Handle the response from the server
+          },
+          error: function (error) {
+            // Handle any errors that occur during the AJAX request
+            console.log(error);
+          }
+        });
+
+      });
+    });
+
+    function weatherDataConfig(response) {
+      var temperature = response.main.temp - 273.15
+      document.getElementById("temp").textContent = temperature.toFixed(2) + "°C"
+      document.getElementById("state").textContent = response.weather[0].description
+      var windSpeed = response.wind.speed * (18 / 5)
+      document.getElementById("speed").textContent = windSpeed.toFixed(2) + "km/h" + "  "
+      updateWindIcon(response.wind.deg)
+      document.getElementById("humidity").textContent = response.main.humidity + "%"
+      document.getElementById("sunrise").textContent = response.main.humidity + "%"
+      document.getElementById("sunset").textContent = response.main.humidity + "%"
+
+    }
+
+    function updateWindIcon(deg) {
+      console.log(deg);
+      var direction = document.getElementById("icon")
+
+      if (deg < 90) {
+        direction.className = "bi bi-arrow-up-right-circle-fill"
+      } else if (deg === 90) {
+        direction.className = "bi bi-arrow-right-circle-fill"
+      } else if (deg < 180) {
+        direction.className = "bi bi-arrow-down-right-circle-fill"
+      } else if (deg === 180) {
+        direction.className = "bi bi-arrow-down-circle-fill"
+      } else if (deg < 270) {
+        direction.className = "bi bi-arrow-down-left-circle-fill"
+      } else if (deg === 270) {
+        direction.className = "bi bi-arrow-left-circle-fill"
+      } else if (deg < 360) {
+        direction.className = "bi bi-arrow-up-left-circle-fill"
+      } else {
+        direction.className = "bi bi-dot"
+      }
+
+    }
+  </script>
+</body>
+
+</html>
