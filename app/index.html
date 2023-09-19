@@ -17,13 +17,14 @@
 </head>
 
 <body>
-  <section class="vh-100" style="background-color: #4B515D;">
+  <section id="bgimg" class="vh-100" 
+    style="background-color: #4B515D; background-image: url(); background-size: cover;background-position: center;background-repeat: no-repeat; ">
     <div class="container py-5 h-100">
 
       <div class="row d-flex justify-content-center align-items-center h-100">
         <div class="col-md-8 col-lg-6 col-xl-4">
 
-          <div class="card" style="color: #4B515D; border-radius: 35px;">
+          <div class="card" style="color: #323743; background-color: rgb(213, 229, 243); border-radius: 35px; opacity: 90%;">
 
 
             <div class="card-body p-4">
@@ -33,7 +34,7 @@
                     <input type="search" placeholder="City" id="cityInput" class="form-control" />
 
                 </div>
-                <button type="button" id="submitButton" class="btn btn-secondary">
+                <button type="button" style="background-color: #8891a09c;" id="submitButton" class="btn btn-secondary">
                   <i class="fas fa-search">search</i>
                 </button>
                 </form>
@@ -47,9 +48,13 @@
 
             <div class="card-body p-4">
 
-              <div class="d-flex">
-                <h6 class="flex-grow-1">Warsaw</h6>
-                <h6>15:07</h6>
+              <div class="d-flex align-items-top">
+                <h6 class="flex-grow-1" style="font-size: 1.2rem;" id="city">Delhi, India</h6>
+                <div>
+                  <h6 id="time" style="font-size: 1.1rem;">15:07</h6>
+                  <h6 id="date" style="font-size: 1.1rem;">01-01-2006</h6>
+                  <h6 id="day" style="font-size: 1.1rem;">Monday</h6>
+                </div>
               </div>
 
               <div class="d-flex flex-column text-center mt-5 mb-4">
@@ -74,8 +79,7 @@
                   </div>
                 </div>
                 <div>
-                  <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-weather/ilu1.webp"
-                    width="100px">
+                  <img id="weatherimg" src="" width="150px">
                 </div>
               </div>
 
@@ -122,16 +126,20 @@
     });
 
     function weatherDataConfig(response) {
-      var temperature = response.main.temp - 273.15
-      document.getElementById("temp").textContent = temperature.toFixed(2) + "°C"
+      document.getElementById("temp").textContent = response.main.temp.toFixed(2) + "°C"
       document.getElementById("state").textContent = response.weather[0].description
-      var windSpeed = response.wind.speed * (18 / 5)
-      document.getElementById("speed").textContent = windSpeed.toFixed(2) + "km/h" + "  "
+      document.getElementById("speed").textContent = response.wind.speed.toFixed(2) + "km/h" + "  "
       updateWindIcon(response.wind.deg)
       document.getElementById("humidity").textContent = response.main.humidity + "%"
-      document.getElementById("sunrise").textContent = response.main.humidity + "%"
-      document.getElementById("sunset").textContent = response.main.humidity + "%"
-
+      document.getElementById("sunrise").textContent = response.localsunrise
+      document.getElementById("sunset").textContent = response.localsunset
+      document.getElementById("weatherimg").src = response.weather[0].image
+      document.getElementById("city").textContent = response.name + ", " + response.countryname
+      document.getElementById("time").textContent = response.now.time
+      document.getElementById("date").textContent = response.now.date
+      document.getElementById("day").textContent = getDayName(response.now.day)
+      document.getElementById("bgimg").style.backgroundImage = `url('${response.bgimage}')`
+     
     }
 
     function updateWindIcon(deg) {
@@ -156,6 +164,11 @@
         direction.className = "bi bi-dot"
       }
 
+    }
+    function getDayName(dayNumber) {
+      const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+
+      return daysOfWeek[dayNumber];
     }
   </script>
 </body>

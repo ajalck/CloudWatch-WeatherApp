@@ -16,6 +16,7 @@ type WeatherData struct {
 	Weather []struct {
 		Description string `json:"description"`
 		Icon        string `json:"icon"`
+		Image       string `json:"image"`
 	} `json:"weather"`
 	Main struct {
 		Temp      float64 `json:"temp"`
@@ -33,11 +34,17 @@ type WeatherData struct {
 		Sunset  int64  `json:"sunset"`
 	} `json:"sys"`
 	TimeZoneOffset int64 `json:"timezone"`
-	Time time.Time
-	SunRise time.Time
-	SunSet time.Time
-	CountryName string
 
+	//
+	Now struct {
+		Time string       `json:"time"`
+		Date string       `json:"date"`
+		Day  time.Weekday `json:"day"`
+	} `json:"now"`
+	LocalSunRise string `json:"localsunrise"`
+	LocalSunSet  string `json:"localsunset"`
+	CountryName  string `json:"countryname"`
+	BGImage      string `json:"bgimage"`
 }
 
 func LoadApiConfig(filename string) (apiConfigData, error) {

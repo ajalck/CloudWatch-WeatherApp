@@ -24,8 +24,11 @@ func main() {
 			return
 		}
 		w.Header().Set("Content-Type", "application/json")
-		fmt.Println(data)
-		jsonData, err := json.Marshal(data)
+		weatherData := app.SetUpOutput(data)
+		
+		fmt.Println(fmt.Println(weatherData))
+			
+		jsonData, err := json.Marshal(weatherData)
 		if err != nil {
 			log.Fatalln(err)
 		}
