@@ -19,7 +19,7 @@
 <body>
   <section id="bgimg" class="vh-100"
     style="background-color: #4B515D; background-image: url(); background-size: cover;background-position: center;background-repeat: no-repeat; margin: 0; ">
-    <div class="container py-5 h-100">
+    <div class="container h-100">
 
       <div class="row d-flex justify-content-center align-items-center h-100">
         <div class="col-md-8 col-lg-6 col-xl-4">
@@ -34,10 +34,11 @@
                   <form method="post" id="form" style="display: flex;">
                     <input type="search" placeholder="City" id="cityInput" class="form-control" />
 
-                    <button type="button" style="background-color: #8891a09c;" id="submitButton" class="btn btn-secondary">
+                    <button type="button" style="background-color: #8891a09c;" id="submitButton"
+                      class="btn btn-secondary">
                       <i class="fas fa-search">search</i>
                     </button>
-                    
+
                   </form>
                 </div>
 
@@ -139,7 +140,7 @@
     });
 
 
-    
+
     function weatherDataConfig(response) {
       document.getElementById("temp").textContent = response.main.temp.toFixed(2) + "°C"
       document.getElementById("state").textContent = response.weather[0].description
@@ -158,10 +159,10 @@
       feels.querySelector("h5").textContent = "  " + response.main.feels_like.toFixed(2) + "°C"
 
       if (response.main.feels_like <= response.main.temp) {
-        feels.querySelector("img").style.display="inline"
+        feels.querySelector("img").style.display = "inline"
         feels.querySelector("img").src = "https://static-00.iconduck.com/assets.00/smiling-face-with-sunglasses-emoji-512x477-yhg8fycl.png";
       } else {
-        feels.querySelector("img").style.display="inline"
+        feels.querySelector("img").style.display = "inline"
         feels.querySelector("img").src = "https://static-00.iconduck.com/assets.00/hot-face-emoji-512x472-1ezklsjt.png";
       }
     }
