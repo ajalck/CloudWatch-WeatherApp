@@ -2,9 +2,12 @@ package app
 
 import (
 	"encoding/json"
+	"errors"
+	"fmt"
 	"io"
 	"log"
 	"net/http"
+	"reflect"
 	"time"
 
 	"WeatherApp/config"
@@ -25,13 +28,33 @@ func GetWeatherData(city string) (*config.WeatherData, error) {
 	}
 	defer resp.Body.Close()
 	values, _ := io.ReadAll(resp.Body)
-	log.Println(string(values))
+	fmt.Println(string(values))
+
+	///
+	verifier := struct {
+		StatusCod interface{} `json:"cod"`
+	}{}
+	json.Unmarshal(values, &verifier)
+	cod := verifier.StatusCod
+	//val := reflect.ValueOf(cod)
+	if reflect.ValueOf(cod).Kind() == reflect.Float64 {
+		if cod.(float64) != float64(200) {
+			return &config.WeatherData{}, errors.New("nod data found")
+		}
+	} else if reflect.ValueOf(cod).Kind() == reflect.String {
+		if cod.(string) != "200" {
+			return &config.WeatherData{}, errors.New("nod data found")
+		}
+	}
+	///
+
 	var d config.WeatherData
 	err = json.Unmarshal(values, &d)
 	if err != nil {
-		log.Println(err)
+		log.Println("error is: ", err)
 		return &config.WeatherData{}, err
 	}
+
 	return &d, nil
 }
 func GetCountryName(code string) (string, error) {
@@ -81,21 +104,21 @@ func SetUpOutput(weatherData *config.WeatherData) *config.WeatherData {
 
 	riseTime := time.Unix(weatherData.Sys.SunRise, 0)
 	setTime := time.Unix(weatherData.Sys.Sunset, 0)
-	sunRise := riseTime.UTC().Add(time.Second * time.Duration(timezoneOffsetSeconds)).Format("03:04 PM")
-	sunset := setTime.UTC().Add(time.Second * time.Duration(timezoneOffsetSeconds)).Format("03:04 PM")
+	sunRise := riseTime.UTC().Add(time.Second * time.Duration(timezoneOffsetSeconds))
+	sunset := setTime.UTC().Add(time.Second * time.Duration(timezoneOffsetSeconds))
 
 	// Getting the Country Name
 
 	country, _ := GetCountryName(weatherData.Sys.Country)
 
 	// Setting Background image
+	fmt.Println("set and rise time is :", sunRise, sunset, "-----------------", now)
 	var bgimg string
-	if now.Before(setTime) {
+	if now.After(sunRise) && now.Before(sunset) {
 		bgimg = "https://png.pngtree.com/thumb_back/fh260/background/20201012/pngtree-white-cloud-on-blue-sky-weather-background-image_410050.jpg"
-	} else if now.After(riseTime) {
-		bgimg = "https://mdbootstrap.com/img/new/fluid/nature/015.jpg"
+	} else if now.After(sunset) ||now.Before(sunRise){
+		bgimg = "https://wallpapercave.com/wp/wp9017481.jpg"
 	}
-
 	weatherData.Weather[0].Image = weatherImg
 	weatherData.Main.Temp = Temp
 	weatherData.Main.FeelsLike = TempFeels
@@ -103,8 +126,8 @@ func SetUpOutput(weatherData *config.WeatherData) *config.WeatherData {
 	weatherData.Now.Time = currentTime
 	weatherData.Now.Date = currentDate
 	weatherData.Now.Day = currentDay
-	weatherData.LocalSunRise = sunRise
-	weatherData.LocalSunSet = sunset
+	weatherData.LocalSunRise = sunRise.Format("03:04 PM")
+	weatherData.LocalSunSet = sunset.Format("03:04 PM")
 	weatherData.CountryName = country
 	weatherData.BGImage = bgimg
 
