@@ -157,16 +157,30 @@
       document.getElementById("bgimg").style.backgroundImage = `url('${response.bgimage}')`
       feels = document.getElementById("feels-like")
       feels.querySelector("h5").textContent = "  " + response.main.feels_like.toFixed(2) + "°C"
-
-      if (response.main.feels_like <= response.main.temp) {
-        feels.querySelector("img").style.display = "inline"
-        feels.querySelector("img").src = "https://static-00.iconduck.com/assets.00/smiling-face-with-sunglasses-emoji-512x477-yhg8fycl.png";
-      } else {
+      updateEmojies(response.main.feels_like)   
+    }
+    function updateEmojies(feelingTemp) {
+      console.log(feelingTemp)
+      if (feelingTemp>37) {
         feels.querySelector("img").style.display = "inline"
         feels.querySelector("img").src = "https://static-00.iconduck.com/assets.00/hot-face-emoji-512x472-1ezklsjt.png";
+      } else if(feelingTemp>31&&feelingTemp<=37){
+        feels.querySelector("img").style.display = "inline"
+        feels.querySelector("img").src = "https://static-00.iconduck.com/assets.00/disappointed-face-emoji-512x512-75j1z3ik.png";
+      }else if(feelingTemp>25&&feelingTemp<=31){
+        feels.querySelector("img").style.display = "inline"
+        feels.querySelector("img").src = "https://static-00.iconduck.com/assets.00/smiling-face-with-sunglasses-emoji-512x477-yhg8fycl.png";
+      }else if(feelingTemp>20&&feelingTemp<=25){
+        feels.querySelector("img").style.display = "inline"
+        feels.querySelector("img").src = "https://static-00.iconduck.com/assets.00/smiling-face-with-open-mouth-and-cold-sweat-emoji-512x492-7jn2w840.png";
+      }else if(feelingTemp>10&&feelingTemp<=20){
+        feels.querySelector("img").style.display = "inline"
+        feels.querySelector("img").src = "https://static-00.iconduck.com/assets.00/cold-face-emoji-502x512-0aupa4c5.png";
+      }else {
+        feels.querySelector("img").style.display = "inline"
+        feels.querySelector("img").src = "https://static-00.iconduck.com/assets.00/cold-face-emoji-512x512-k8er8wn9.png";
       }
     }
-
     function updateWindIcon(deg) {
       console.log(deg);
       var direction = document.getElementById("icon")
