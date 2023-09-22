@@ -3,7 +3,6 @@ package app
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"io"
 	"log"
 	"net/http"
@@ -28,7 +27,6 @@ func GetWeatherData(city string) (*config.WeatherData, error) {
 	}
 	defer resp.Body.Close()
 	values, _ := io.ReadAll(resp.Body)
-	fmt.Println(string(values))
 
 	///
 	verifier := struct {
@@ -36,7 +34,6 @@ func GetWeatherData(city string) (*config.WeatherData, error) {
 	}{}
 	json.Unmarshal(values, &verifier)
 	cod := verifier.StatusCod
-	//val := reflect.ValueOf(cod)
 	if reflect.ValueOf(cod).Kind() == reflect.Float64 {
 		if cod.(float64) != float64(200) {
 			return &config.WeatherData{}, errors.New("nod data found")
@@ -112,11 +109,10 @@ func SetUpOutput(weatherData *config.WeatherData) *config.WeatherData {
 	country, _ := GetCountryName(weatherData.Sys.Country)
 
 	// Setting Background image
-	fmt.Println("set and rise time is :", sunRise, sunset, "-----------------", now)
 	var bgimg string
 	if now.After(sunRise) && now.Before(sunset) {
 		bgimg = "https://png.pngtree.com/thumb_back/fh260/background/20201012/pngtree-white-cloud-on-blue-sky-weather-background-image_410050.jpg"
-	} else if now.After(sunset) ||now.Before(sunRise){
+	} else if now.After(sunset) || now.Before(sunRise) {
 		bgimg = "https://wallpapercave.com/wp/wp9017481.jpg"
 	}
 	weatherData.Weather[0].Image = weatherImg

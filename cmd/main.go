@@ -12,7 +12,7 @@ import (
 func main() {
 	http.HandleFunc("/hello", app.Hello)
 	http.HandleFunc("/weather", func(w http.ResponseWriter, r *http.Request) {
-		htmlPage := "./index.html"
+		htmlPage := "./app/index.html"
 		http.ServeFile(w, r, htmlPage)
 	})
 	http.HandleFunc("/weather/:city", func(w http.ResponseWriter, r *http.Request) {
@@ -20,13 +20,10 @@ func main() {
 		data, err := app.GetWeatherData(City)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
-			log.Println("not data !!!!!!!!!!!!!!!!!")
 			return
 		}
 		w.Header().Set("Content-Type", "application/json")
 		weatherData := app.SetUpOutput(data)
-		
-		fmt.Println(fmt.Println(weatherData))
 
 		jsonData, err := json.Marshal(weatherData)
 		if err != nil {
