@@ -31,8 +31,8 @@ func main() {
 		}
 		fmt.Fprint(w, string(jsonData))
 	})
-	log.Println("Server Sarting at: 8080")
-	if err := http.ListenAndServe(":8080", nil); err != nil {
+	log.Println("Server Sarting at: 6060")
+	if err := http.ListenAndServe(":6060", nil); err != nil {
 		log.Fatalln("Failed to start server")
 	}
 }
