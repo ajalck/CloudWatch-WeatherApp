@@ -128,11 +128,11 @@
           error: function (error) {
             document.getElementById("alert").textContent = "Ohh! Enter a valid city name"
 
+            console.log(error);
             // Handle any errors that occur during the AJAX request
             setTimeout(() => {
               window.location.reload()
             }, 2000);
-            console.log(error);
           }
         });
 
